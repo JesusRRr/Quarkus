@@ -1,8 +1,10 @@
 package com.rolon.quarkus;
 
 import com.rolon.quarkus.data.Book;
+import com.rolon.quarkus.service.BookService;
 import io.netty.util.internal.StringUtil;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -13,6 +15,8 @@ import java.util.List;
 @Path("/book")
 public class BookResource {
     private static List<Book> books = new ArrayList<>();
+    @Inject
+    private BookService bookService;
 
     static{
         books.add(new Book("The Freelancer's bible","IDK"));
@@ -26,7 +30,8 @@ public class BookResource {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Book addBook(@Valid  Book book){
+    public Book addBook(Book book){
+        bookService.checkBook(book);
         books.add(book);
         return book;
     }
